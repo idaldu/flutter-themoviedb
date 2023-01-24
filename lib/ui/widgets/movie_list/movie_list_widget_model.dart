@@ -139,6 +139,11 @@ class MovieListWidgetModel extends ChangeNotifier {
   void setup() {
     filteredMovies = movies;
   }
+
+  void onMovieTap(BuildContext context, int index) {
+    final id = movies[index].id;
+    Navigator.of(context).pushNamed('/main_screen/movie_details', arguments: id);
+  }
 }
 
 class MovieListWidgetModelProvider extends InheritedNotifier {

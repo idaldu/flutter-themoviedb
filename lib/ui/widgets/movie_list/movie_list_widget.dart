@@ -96,7 +96,7 @@ class ListWidget extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10),
-                      onTap: () {},
+                      onTap: () => model?.onMovieTap(context, index),
                     ),
                   )
                 ],

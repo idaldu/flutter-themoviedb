@@ -13,7 +13,6 @@ class AuthWidget extends StatefulWidget {
 }
 
 class _AuthWidgetState extends State<AuthWidget> {
-  final _model = AuthWidgetModel();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,10 +23,7 @@ class _AuthWidgetState extends State<AuthWidget> {
       body: ListView(
         children: [
           const SizedBox(height: 25),
-          AuthWidgetModelProvider(
-            model: _model,
-            child: _FormWidget(),
-          ),
+          _FormWidget(),
           const SizedBox(height: 25),
           const _RegistrationWidget()
         ],
@@ -82,7 +78,7 @@ class _RegistrationWidget extends StatelessWidget {
 class _FormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = AuthWidgetModelProvider.watch(context)?.model;
+    final model = AuthWidgetModelProvider.read(context)?.model;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -92,7 +88,7 @@ class _FormWidget extends StatelessWidget {
           const SizedBox(height: 5),
           TextField(
             decoration: AppTextFieldStyle.mainTextField,
-            onChanged: (value) => model?.userName = value,
+            controller: model?.userNameTextController,
           ),
           const SizedBox(height: 20),
           const Text('Password', style: AppTextStyle.mainText),
@@ -100,33 +96,15 @@ class _FormWidget extends StatelessWidget {
           TextField(
             decoration: AppTextFieldStyle.mainTextField,
             obscureText: true,
-            onChanged: (value) => model?.password = value,
+            controller: model?.passwordTextController,
           ),
-          if (model?.errorText != '')
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Text(
-                model?.errorText ?? '',
-                style: AppTextStyle.errorText,
-              ),
-            ),
-          const SizedBox(height: 20),
+          const _ErrorMessageWidget(),
           Row(
             children: [
-              ElevatedButton(
-                onPressed: () => model?.auth(context),
-                style: AppButtonStyle.elevatedButton,
-                child: const Text(
-                  'Login',
-                  style: TextStyle(
-                    color: AppColors.mainWhite,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
+              const _AuthButtonWidget(),
               const SizedBox(width: 25),
               TextButton(
-                onPressed: () => model?.resetPassword(context),
+                onPressed: () {},
                 child: const Text(
                   'Reset password',
                   style: AppButtonStyle.textButton,
@@ -135,6 +113,57 @@ class _FormWidget extends StatelessWidget {
             ],
           )
         ],
+      ),
+    );
+  }
+}
+
+class _AuthButtonWidget extends StatelessWidget {
+  const _AuthButtonWidget({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final model = AuthWidgetModelProvider.watch(context)?.model;
+    final child = model?.isAuthProgress == true
+        ? const SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              color: AppColors.mainWhite,
+              strokeWidth: 3,
+            ),
+          )
+        : const Text('Login',
+            style: TextStyle(
+              color: AppColors.mainWhite,
+              fontSize: 15,
+            ));
+    final onPressed =
+        model?.canStartAuth == true ? () => model?.auth(context) : null;
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: AppButtonStyle.elevatedButton,
+      child: child,
+    );
+  }
+}
+
+class _ErrorMessageWidget extends StatelessWidget {
+  const _ErrorMessageWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final errorMessage =
+        AuthWidgetModelProvider.watch(context)?.model.errorMessage;
+    if (errorMessage == null) return const SizedBox(height: 25);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Text(
+        errorMessage,
+        style: AppTextStyle.errorText,
       ),
     );
   }
