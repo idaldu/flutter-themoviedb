@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/ui/navigation/main_navigation.dart';
 import 'package:flutter_application_1/ui/theme/colors.dart';
+import 'package:flutter_application_1/ui/widgets/app/my_app_model.dart';
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final MyAppModel model;
+
+  const MyApp({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +20,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: mainNavigation.routes,
-      initialRoute: mainNavigation.initialRoute,
+      initialRoute: mainNavigation.initialRoute(model.isAuth),
       onGenerateRoute: mainNavigation.onGenerateRoute,
     );
   }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/entity/movies.dart';
 import 'package:flutter_application_1/resources/resources.dart';
+import 'package:flutter_application_1/ui/navigation/main_navigation.dart';
 
 class MovieListWidgetModel extends ChangeNotifier {
   List filteredMovies = <Movie>[];
@@ -142,7 +143,8 @@ class MovieListWidgetModel extends ChangeNotifier {
 
   void onMovieTap(BuildContext context, int index) {
     final id = movies[index].id;
-    Navigator.of(context).pushNamed('/main_screen/movie_details', arguments: id);
+    Navigator.of(context)
+        .pushNamed(MainNavigationRoutsNames.movieDetails, arguments: id);
   }
 }
 

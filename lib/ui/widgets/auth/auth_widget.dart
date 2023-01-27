@@ -75,7 +75,12 @@ class _RegistrationWidget extends StatelessWidget {
   }
 }
 
-class _FormWidget extends StatelessWidget {
+class _FormWidget extends StatefulWidget {
+  @override
+  State<_FormWidget> createState() => _FormWidgetState();
+}
+
+class _FormWidgetState extends State<_FormWidget> {
   @override
   Widget build(BuildContext context) {
     final model = AuthWidgetModelProvider.read(context)?.model;
@@ -93,11 +98,7 @@ class _FormWidget extends StatelessWidget {
           const SizedBox(height: 20),
           const Text('Password', style: AppTextStyle.mainText),
           const SizedBox(height: 5),
-          TextField(
-            decoration: AppTextFieldStyle.mainTextField,
-            obscureText: true,
-            controller: model?.passwordTextController,
-          ),
+          PasswordTextFieldWidget(model: model),
           const _ErrorMessageWidget(),
           Row(
             children: [
@@ -118,6 +119,28 @@ class _FormWidget extends StatelessWidget {
   }
 }
 
+class PasswordTextFieldWidget extends StatelessWidget {
+  const PasswordTextFieldWidget({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
+
+  final AuthWidgetModel? model;
+
+  @override
+  Widget build(BuildContext context) {
+    final model = AuthWidgetModelProvider.watch(context)?.model;
+    return TextField(
+      decoration: const InputDecoration(
+          border: OutlineInputBorder(),
+          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 13),
+          isCollapsed: true),
+      obscureText: false,
+      controller: model?.passwordTextController,
+    );
+  }
+}
+
 class _AuthButtonWidget extends StatelessWidget {
   const _AuthButtonWidget({
     Key? key,
@@ -125,7 +148,7 @@ class _AuthButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = AuthWidgetModelProvider.watch(context)?.model;
+    final model = AuthWidgetModelProvider.read(context)?.model;
     final child = model?.isAuthProgress == true
         ? const SizedBox(
             width: 20,
@@ -151,7 +174,7 @@ class _AuthButtonWidget extends StatelessWidget {
 }
 
 class _ErrorMessageWidget extends StatelessWidget {
-  const _ErrorMessageWidget({super.key});
+  const _ErrorMessageWidget();
 
   @override
   Widget build(BuildContext context) {

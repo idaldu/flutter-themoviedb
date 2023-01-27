@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/domain/data_providers/session_data_provider.dart';
 import 'package:flutter_application_1/ui/widgets/movie_list/movie_list_widget.dart';
 
 class MainScreenWidget extends StatefulWidget {
@@ -16,7 +17,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
     TextWidget(
       text: 'Новости',
     ),
-    MovieListWidget(),
+    const MovieListWidget(),
     TextWidget(
       text: 'Сериалы',
     ),
@@ -35,6 +36,14 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
       appBar: AppBar(
         // automaticallyImplyLeading: false,
         title: const Text('TMDB'),
+        actions: [
+          IconButton(
+            
+            // тут важный момент, в me_app_model у нас создан экземпляр провайдера, а тут мы глобально удаляем SessionId и тем самым выходим из сессии, так как экземпляр ссылается на класс:
+            onPressed: () => SessionDataProvider().setSessionId(null),
+            icon: const Icon(Icons.logout_outlined),
+          )
+        ],
         centerTitle: true,
       ),
       body: Center(
@@ -63,6 +72,7 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
   }
 }
 
+// ignore: must_be_immutable
 class TextWidget extends StatelessWidget {
   String text;
 

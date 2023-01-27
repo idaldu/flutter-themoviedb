@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/resources/resources.dart';
-import 'package:flutter_application_1/ui/theme/colors.dart';
 import 'package:flutter_application_1/ui/widgets/movie_details/movie_details_cast_info_widget.dart';
 import 'package:flutter_application_1/ui/widgets/movie_details/movie_details_main_info_widget.dart';
 
+// ignore: must_be_immutable
 class MovieDatailsWidget extends StatelessWidget {
   int id;
 

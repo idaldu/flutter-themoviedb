@@ -85,7 +85,7 @@ class PeopleMovieWidget extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -192,17 +192,17 @@ class ScoreMovieWidget extends StatelessWidget {
         TextButton(
           onPressed: () {},
           child: Row(
-            children: [
+            children: const [
               SizedBox(
                 width: 40,
                 height: 40,
                 child: RadialPercentWidget(
                   percent: 0.86,
-                  fillColor: const Color.fromARGB(255, 10, 23, 25),
-                  lineColor: const Color.fromARGB(255, 37, 203, 103),
-                  freeColor: const Color.fromARGB(255, 25, 54, 31),
+                  fillColor: Color.fromARGB(255, 10, 23, 25),
+                  lineColor: Color.fromARGB(255, 37, 203, 103),
+                  freeColor: Color.fromARGB(255, 25, 54, 31),
                   lineWidth: 3,
-                  child: const Text(
+                  child: Text(
                     '72',
                     style: TextStyle(
                       color: AppColors.mainWhite,
@@ -212,8 +212,8 @@ class ScoreMovieWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(width: 10),
-              const Text(
+              SizedBox(width: 10),
+              Text(
                 'User Score',
                 style: TextStyle(
                   color: AppColors.mainWhite,
