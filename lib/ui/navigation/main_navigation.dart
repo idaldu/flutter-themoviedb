@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/library/widgets/inherited/notifier_provider.dart';
 import 'package:flutter_application_1/ui/widgets/auth/auth_widget.dart';
 import 'package:flutter_application_1/ui/widgets/auth/auth_widget_model.dart';
 import 'package:flutter_application_1/ui/widgets/main/main_screen_widget.dart';
@@ -6,7 +7,7 @@ import 'package:flutter_application_1/ui/widgets/movie_details/movie_datails_wid
 
 // тут прописаны маршруты, с помощью
 // данного класса мы меняем их в одном месте:
-abstract class MainNavigationRoutsNames {
+abstract class MainNavigationRouteNames {
   static const auth = 'auth';
   static const main = '/';
   static const movieDetails = '/movie_details';
@@ -17,21 +18,21 @@ class MainNavigation {
   // в зависимости от того, авторизованы
   // мы или нет возвращаем разные экраны:
   String initialRoute(bool isAuth) =>
-      isAuth ? MainNavigationRoutsNames.main : MainNavigationRoutsNames.auth;
+      isAuth ? MainNavigationRouteNames.main : MainNavigationRouteNames.auth;
 
   // тут прописаны основные роуты в
   // которых мы не передаем никакие аргументы:
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRoutsNames.auth: (context) => AuthWidgetModelProvider(
-        model: AuthWidgetModel(), child: const AuthWidget()),
-    MainNavigationRoutsNames.main: (context) => const MainScreenWidget(),
+    MainNavigationRouteNames.auth: (context) =>
+        NotifierProvider(model: AuthWidgetModel(), child: const AuthWidget()),
+    MainNavigationRouteNames.main: (context) => const MainScreenWidget(),
   };
 
   // данный класс генерит экраны в зависимости
   // от переданного ключа мы генерим экран и передаем туда аргументы:
   Route<Object> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
-      case MainNavigationRoutsNames.movieDetails:
+      case MainNavigationRouteNames.movieDetails:
 
         // вот тут мы могли бы просто вытащить сразу с аргумента
         // id, но мы делаем проверку, там если аргументов попало много мы подстраховываемся

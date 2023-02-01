@@ -1,42 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/resources/resources.dart';
+import 'package:flutter_application_1/domain/api_client/api_client.dart';
+import 'package:flutter_application_1/library/widgets/inherited/notifier_provider.dart';
 import 'package:flutter_application_1/ui/theme/app_text_field_style.dart';
 import 'package:flutter_application_1/ui/theme/app_text_style.dart';
 import 'package:flutter_application_1/ui/theme/colors.dart';
 import 'package:flutter_application_1/ui/widgets/movie_list/movie_list_widget_model.dart';
 
-class MovieListWidget extends StatefulWidget {
-  const MovieListWidget({Key? key}) : super(key: key);
-
-  @override
-  State<MovieListWidget> createState() => _MovieListWidgetState();
-}
-
-class _MovieListWidgetState extends State<MovieListWidget> {
-  final _model = MovieListWidgetModel();
-  @override
-  Widget build(BuildContext context) {
-    return MovieListWidgetModelProvider(
-        model: _model, child: const ListWidget());
-  }
-}
-
-class ListWidget extends StatelessWidget {
-  const ListWidget({
+class MovieListWidget extends StatelessWidget {
+  const MovieListWidget({
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final model = MovieListWidgetModelProvider.watch(context)?.model;
+    final model = NotifierProvider.watch<MovieListWidgetModel>(context);
+    if (model == null) return const SizedBox.shrink();
     return Stack(
       children: [
         ListView.builder(
           padding: const EdgeInsets.only(top: 60),
-          itemCount: model?.filteredMovies.length,
+          itemCount: model.movies.length,
           itemExtent: 200,
           itemBuilder: (BuildContext context, int index) {
-            final movie = model?.filteredMovies[index];
+            final movie = model.movies[index];
+            final posterPath = movie.posterPath;
             return Padding(
               padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
               child: Stack(
@@ -57,9 +44,10 @@ class ListWidget extends StatelessWidget {
                     ),
                     child: Row(
                       children: [
-                        Image(
-                            image: AssetImage(
-                                movie?.imageName ?? AppImages.moviePlacholder)),
+                        posterPath != null
+                            ? Image.network(ApiClient.imageUrl(posterPath))
+                            : const SizedBox.shrink(),
+                        const SizedBox(width: 10),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Padding(
@@ -69,17 +57,17 @@ class ListWidget extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  movie?.title ?? '',
+                                  movie.title,
                                   style: AppTextStyle.boldText,
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  movie?.time ?? '',
+                                  model.stringFromDate(movie.releaseDate),
                                   style: AppTextStyle.greyText,
                                 ),
                                 const SizedBox(height: 30),
                                 Text(
-                                  movie?.description ?? '',
+                                  movie.overview,
                                   style: const TextStyle(),
                                   overflow: TextOverflow.ellipsis,
                                   maxLines: 2,
@@ -96,7 +84,7 @@ class ListWidget extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(10),
-                      onTap: () => model?.onMovieTap(context, index),
+                      onTap: () => model.onMovieTap(context, index),
                     ),
                   )
                 ],
@@ -108,7 +96,7 @@ class ListWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: TextField(
             decoration: AppTextFieldStyle.searchTextField,
-            onChanged: (value) => model?.searchMovies(value),
+            onChanged: (value) {},
           ),
         ),
       ],

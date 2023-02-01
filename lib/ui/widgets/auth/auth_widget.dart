@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/library/widgets/inherited/notifier_provider.dart';
 import 'package:flutter_application_1/ui/theme/app_button_style.dart';
 import 'package:flutter_application_1/ui/theme/app_text_field_style.dart';
 import 'package:flutter_application_1/ui/theme/colors.dart';
@@ -75,15 +76,10 @@ class _RegistrationWidget extends StatelessWidget {
   }
 }
 
-class _FormWidget extends StatefulWidget {
-  @override
-  State<_FormWidget> createState() => _FormWidgetState();
-}
-
-class _FormWidgetState extends State<_FormWidget> {
+class _FormWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final model = AuthWidgetModelProvider.read(context)?.model;
+    final model = NotifierProvider.read<AuthWidgetModel>(context);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Column(
@@ -129,7 +125,7 @@ class PasswordTextFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = AuthWidgetModelProvider.watch(context)?.model;
+    final model = NotifierProvider.watch<AuthWidgetModel>(context);
     return TextField(
       decoration: const InputDecoration(
           border: OutlineInputBorder(),
@@ -148,7 +144,7 @@ class _AuthButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = AuthWidgetModelProvider.read(context)?.model;
+    final model = NotifierProvider.read<AuthWidgetModel>(context);
     final child = model?.isAuthProgress == true
         ? const SizedBox(
             width: 20,
@@ -179,7 +175,7 @@ class _ErrorMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final errorMessage =
-        AuthWidgetModelProvider.watch(context)?.model.errorMessage;
+        NotifierProvider.watch<AuthWidgetModel>(context)?.errorMessage;
     if (errorMessage == null) return const SizedBox(height: 25);
 
     return Padding(

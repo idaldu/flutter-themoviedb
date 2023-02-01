@@ -14,7 +14,8 @@ class AuthWidgetModel extends ChangeNotifier {
   final userNameTextController = TextEditingController(text: 'alanddu');
 
   // создали экземпляр контроллера для поля password:
-  final passwordTextController = TextEditingController(text: '62152bdhjricg@#\$\$');
+  final passwordTextController =
+      TextEditingController(text: '62152bdhjricg@#\$\$');
 
   // флаг показывающий статус загрузки,
   // она приватная и чтобы ее получить используем геттер:
@@ -61,8 +62,21 @@ class AuthWidgetModel extends ChangeNotifier {
         userName: login,
         password: password,
       );
+    } on ApiClientException catch (e) {
+      switch (e.type) {
+        case ApiClientExceptionType.network:
+          _errorMessage =
+              'Сервер недоступен, проверьте подключение к интернету';
+          break;
+        case ApiClientExceptionType.auth:
+          _errorMessage = 'Неправильный логин или пароль';
+          break;
+        case ApiClientExceptionType.other:
+          _errorMessage = 'Произошла ошибка. Попробуйте еще раз';
+          break;
+      }
     } catch (error) {
-      _errorMessage = 'Неправильный логин или пароль';
+      _errorMessage = 'Произошла ошибка. Попробуйте еще раз';
     }
 
     // передаем false и тем самым
@@ -87,32 +101,35 @@ class AuthWidgetModel extends ChangeNotifier {
     await _sessionDataProvider.setSessionId(sessionId);
 
     // тут мы воспользовались
-    // абстрактным классом и передали нужный ключ, также мы убираем кнопку возврата на пред. экран  помощью 
+    // абстрактным классом и передали нужный ключ, также мы убираем кнопку возврата на пред. экран  помощью
     // pushReplacementNamed:
     // ignore: use_build_context_synchronously
-    Navigator.of(context).pushReplacementNamed(MainNavigationRoutsNames.main);
+    Navigator.of(context).pushReplacementNamed(MainNavigationRouteNames.main);
   }
 }
 
-class AuthWidgetModelProvider extends InheritedNotifier {
-  final AuthWidgetModel model;
+// До этого мы прописывали провайдер в каждой модели, но теперь используем общий 
+// который создается из универсального класса и ему передается нужный тип:
 
-  const AuthWidgetModelProvider(
-      {super.key, required Widget child, required this.model})
-      : super(
-          child: child,
-          notifier: model,
-        );
+// class AuthWidgetModelProvider extends InheritedNotifier {
+//   final AuthWidgetModel model;
 
-  static AuthWidgetModelProvider? watch(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<AuthWidgetModelProvider>();
-  }
+//   const AuthWidgetModelProvider(
+//       {super.key, required Widget child, required this.model})
+//       : super(
+//           child: child,
+//           notifier: model,
+//         );
 
-  static AuthWidgetModelProvider? read(BuildContext context) {
-    final widget = context
-        .getElementForInheritedWidgetOfExactType<AuthWidgetModelProvider>()
-        ?.widget;
-    return widget is AuthWidgetModelProvider ? widget : null;
-  }
-}
+//   static AuthWidgetModelProvider? watch(BuildContext context) {
+//     return context
+//         .dependOnInheritedWidgetOfExactType<AuthWidgetModelProvider>();
+//   }
+
+//   static AuthWidgetModelProvider? read(BuildContext context) {
+//     final widget = context
+//         .getElementForInheritedWidgetOfExactType<AuthWidgetModelProvider>()
+//         ?.widget;
+//     return widget is AuthWidgetModelProvider ? widget : null;
+//   }
+// }
