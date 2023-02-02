@@ -22,10 +22,11 @@ class MovieListWidget extends StatelessWidget {
           itemCount: model.movies.length,
           itemExtent: 200,
           itemBuilder: (BuildContext context, int index) {
+            model.showedMovieAtIndex(index);
             final movie = model.movies[index];
             final posterPath = movie.posterPath;
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
               child: Stack(
                 children: [
                   Container(
@@ -47,7 +48,6 @@ class MovieListWidget extends StatelessWidget {
                         posterPath != null
                             ? Image.network(ApiClient.imageUrl(posterPath))
                             : const SizedBox.shrink(),
-                        const SizedBox(width: 10),
                         const SizedBox(width: 10),
                         Expanded(
                           child: Padding(
@@ -96,7 +96,7 @@ class MovieListWidget extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: TextField(
             decoration: AppTextFieldStyle.searchTextField,
-            onChanged: (value) {},
+            onChanged: model.searchMovie,
           ),
         ),
       ],
