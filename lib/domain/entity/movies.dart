@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/domain/entity/movie_date_parser.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'movies.g.dart';
@@ -9,7 +10,7 @@ class Movie {
   final String overview;
 
   // мы можем создать свою функцию и скормить ее аннотицие:
-  @JsonKey(fromJson: _parseDateFromString)
+  @JsonKey(fromJson: parseDateFromString)
   final DateTime? releaseDate;
 
   final List<int> genreIds;
@@ -43,12 +44,4 @@ class Movie {
   factory Movie.fromJson(Map<String, dynamic> json) => _$MovieFromJson(json);
 
   Map<String, dynamic> toJson() => _$MovieToJson(this);
-
-  // эта функция была создана для того,
-  // чтобы если будет пустая строка, то он возвращал null,
-  // без нее он ломается и сериализация проходит с ошибкой:
-  static DateTime? _parseDateFromString(String? rawDate) {
-    if (rawDate == null || rawDate.isEmpty) return null;
-    return DateTime.tryParse(rawDate);
-  }
 }

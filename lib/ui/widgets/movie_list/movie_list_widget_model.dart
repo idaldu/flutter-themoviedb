@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/domain/api_client/api_client.dart';
 import 'package:flutter_application_1/domain/entity/movies.dart';
@@ -24,7 +26,9 @@ class MovieListWidgetModel extends ChangeNotifier {
 
   var _isLoadingInProgres = false;
 
-  String? searchQuery;
+  String? _searchQuery;
+
+  Timer? searchDeboubce;
 
   // функция отображенния корректной даты:
   String stringFromDate(DateTime? date) =>
@@ -43,15 +47,16 @@ class MovieListWidgetModel extends ChangeNotifier {
     _currentPage = 0;
 
     _totalPage = 1;
-    _movies.clear;
-    _loadNextPage();
+    _movies.clear();
+    await _loadNextPage();
   }
 
   Future<PopularMovieResponse> _loadMovies(int nextPage, String locale) async {
-    if (searchQuery == null) {
-      return _apiClient.popularMovie(nextPage, _locale);
+    final query = _searchQuery;
+    if (query == null) {
+      return await _apiClient.popularMovie(nextPage, locale);
     } else {
-      return await _apiClient.searchMovie(nextPage, locale, searchQuery!);
+      return await _apiClient.searchMovie(nextPage, locale, query);
     }
   }
 
@@ -68,6 +73,7 @@ class MovieListWidgetModel extends ChangeNotifier {
       _movies.addAll(moviesResponse.movies);
       _currentPage = moviesResponse.page;
       _totalPage = moviesResponse.totalPages;
+      _isLoadingInProgres = false;
 
       // важно при ошибке не уведомлять подписчиков,
       // так как произойдет бесконечная загрузка:
@@ -89,7 +95,13 @@ class MovieListWidgetModel extends ChangeNotifier {
   }
 
   Future<void> searchMovie(String text) async {
-    searchQuery = text.isEmpty ? text : null;
-    await _resetList();
+    searchDeboubce?.cancel();
+
+    searchDeboubce = Timer(const Duration(milliseconds: 300), () async {
+      final searchQuery = text.isNotEmpty ? text : null;
+      if (searchQuery == _searchQuery) return;
+      _searchQuery = searchQuery;
+      await _resetList();
+    });
   }
 }

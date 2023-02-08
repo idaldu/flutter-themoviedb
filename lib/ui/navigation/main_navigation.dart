@@ -39,7 +39,7 @@ class MainNavigation {
         final arguments = settings.arguments;
         final movieId = arguments is int ? arguments : 0;
         return MaterialPageRoute(
-          builder: (context) => MovieDatailsWidget(id: movieId),
+          builder: (context) => MovieDatailsWidget(),
         );
 
       // дефолтный экран, если не подошели кейсы в свитче,

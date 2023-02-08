@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+// 32:00
+
 class NotifierProvider<Model extends ChangeNotifier> extends InheritedNotifier {
   final Model model;
 

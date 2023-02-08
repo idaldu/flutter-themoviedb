@@ -4,11 +4,8 @@ import 'package:flutter_application_1/ui/widgets/movie_details/movie_details_mai
 
 // ignore: must_be_immutable
 class MovieDatailsWidget extends StatelessWidget {
-  int id;
-
   MovieDatailsWidget({
     Key? key,
-    required this.id,
   }) : super(key: key);
 
   @override
