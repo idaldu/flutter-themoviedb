@@ -12,12 +12,16 @@ class MovieDetailsWidgetModel extends ChangeNotifier {
   MovieDetails? _movieDetails;
   String _locale = '';
   late DateFormat _dateFormat;
-  
+
   MovieDetails? get movieDetails => _movieDetails;
 
   MovieDetailsWidgetModel({
     required this.movieId,
   });
+
+  // функция отображенния корректной даты:
+  String stringFromDate(DateTime? date) =>
+      date != null ? _dateFormat.format(date) : '';
 
   Future<void> setupLocale(BuildContext context) async {
     final locale = Localizations.localeOf(context).toLanguageTag();

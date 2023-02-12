@@ -3,7 +3,8 @@ import 'package:flutter_application_1/library/widgets/inherited/notifier_provide
 import 'package:flutter_application_1/ui/widgets/auth/auth_widget.dart';
 import 'package:flutter_application_1/ui/widgets/auth/auth_widget_model.dart';
 import 'package:flutter_application_1/ui/widgets/main/main_screen_widget.dart';
-import 'package:flutter_application_1/ui/widgets/movie_details/movie_datails_widget.dart';
+import 'package:flutter_application_1/ui/widgets/movie_details/movie_details_widget.dart';
+import 'package:flutter_application_1/ui/widgets/movie_details/movie_details_widget_model.dart';
 
 // тут прописаны маршруты, с помощью
 // данного класса мы меняем их в одном месте:
@@ -23,8 +24,10 @@ class MainNavigation {
   // тут прописаны основные роуты в
   // которых мы не передаем никакие аргументы:
   final routes = <String, Widget Function(BuildContext)>{
-    MainNavigationRouteNames.auth: (context) =>
-        NotifierProvider(model: AuthWidgetModel(), child: const AuthWidget()),
+    MainNavigationRouteNames.auth: (context) => NotifierProvider(
+          model: AuthWidgetModel(),
+          child: const AuthWidget(),
+        ),
     MainNavigationRouteNames.main: (context) => const MainScreenWidget(),
   };
 
@@ -39,7 +42,10 @@ class MainNavigation {
         final arguments = settings.arguments;
         final movieId = arguments is int ? arguments : 0;
         return MaterialPageRoute(
-          builder: (context) => MovieDatailsWidget(),
+          builder: (context) => NotifierProvider(
+            model: MovieDetailsWidgetModel(movieId: movieId),
+            child: const MovieDetailsWidget(),
+          ),
         );
 
       // дефолтный экран, если не подошели кейсы в свитче,

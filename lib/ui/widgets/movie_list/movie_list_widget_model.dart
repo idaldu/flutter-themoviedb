@@ -24,7 +24,7 @@ class MovieListWidgetModel extends ChangeNotifier {
 
   late int _totalPage;
 
-  var _isLoadingInProgres = false;
+  var _isLoadingInProgress = false;
 
   String? _searchQuery;
 
@@ -61,8 +61,8 @@ class MovieListWidgetModel extends ChangeNotifier {
   }
 
   Future<void> _loadNextPage() async {
-    if (_isLoadingInProgres || _currentPage >= _totalPage) return;
-    _isLoadingInProgres = true;
+    if (_isLoadingInProgress || _currentPage >= _totalPage) return;
+    _isLoadingInProgress = true;
 
     // добавляем к значению страницы + 1,
     // и отображаем следующую страницу:
@@ -73,13 +73,13 @@ class MovieListWidgetModel extends ChangeNotifier {
       _movies.addAll(moviesResponse.movies);
       _currentPage = moviesResponse.page;
       _totalPage = moviesResponse.totalPages;
-      _isLoadingInProgres = false;
+      _isLoadingInProgress = false;
 
       // важно при ошибке не уведомлять подписчиков,
       // так как произойдет бесконечная загрузка:
       notifyListeners();
     } catch (e) {
-      _isLoadingInProgres = false;
+      _isLoadingInProgress = false;
     }
   }
 

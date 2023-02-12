@@ -52,7 +52,10 @@ class _MainScreenWidgetState extends State<MainScreenWidget> {
             text: 'Новости',
           ),
           NotifierProvider(
-              model: movieListModel, child: const MovieListWidget()),
+            model: movieListModel,
+            isManagingModel: false,
+            child: const MovieListWidget(),
+          ),
           TextWidget(
             text: 'Сериалы',
           ),
